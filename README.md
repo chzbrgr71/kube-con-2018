@@ -1,1 +1,1 @@
-# kube-con-2018
+# KubeCon EU 2018 Demo
