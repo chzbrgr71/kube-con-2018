@@ -11,7 +11,6 @@ events.on("push", (brigadeEvent, project) => {
     var azTenant = project.secrets.azTenant
     var image = "chzbrgr71/kubecon-rating-web"
     var gitSHA = brigadeEvent.revision.commit.substr(0,7)
-    var branch = getBranch(gitPayload)
     var imageTag = "master-" + str(gitSHA)
     var acrImage = str(acrServer) + "/" + image + ":" + imageTag
     
