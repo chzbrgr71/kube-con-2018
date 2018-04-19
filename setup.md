@@ -89,4 +89,6 @@ Brigade pipeline will deploy web front-end.
 
     az acr build -t chzbrgr71/kubecon-rating-web:master-123456 --build-args BUILD_DATE="4/19/2018 4:10pm" VCS_REF=741e61b IMAGE_TAG_REF=master-123456 -f ./Dockerfile --context . -r briaracrbuild
 
+    Thu Apr 19 2018 23:14:14 GMT+0000 (UTC)
+    
     helm upgrade --install --reuse-values kubecon ./app/web/charts/kubecon-rating-web --set image="briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web" --set imageTag="master-0ce0769"
