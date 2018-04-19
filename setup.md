@@ -17,6 +17,14 @@
 
     kubectl apply -f api.yaml
 
+- Create secret for ACR (in Cloud Shell)
+
+    export ACR_SERVER=
+    export ACR_USER=
+    export ACR_PWD=
+
+    kubectl create secret docker-registry acr-secret --docker-server=$ACR_SERVER --docker-username=$ACR_USER --docker-password=$ACR_PWD --docker-email=brianisrunning@gmail.com
+
 - OpenFaaS 
     * Follow step here: https://docs.microsoft.com/en-us/azure/aks/openfaas 
     export FAAS_GW=http://13.89.220.118:8080
@@ -81,3 +89,8 @@ Brigade pipeline will deploy web front-end.
 
     add in stages. build first. then add helm deploy
 
+    helm upgrade --install --reuse-values kubecon ./app/web/charts/kubecon-rating-web --set image="briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web" --set imageTag="master-244069a"
+
+
+briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web:master-244069a    
+briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web:master-244069a

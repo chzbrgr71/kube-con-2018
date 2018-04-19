@@ -1,0 +1,7 @@
+name: kubecon-rating-web
+home: https://github.com/chzbrgr71/kube-con-2018
+version: 1.0
+description: Simple chart for deploying this web app
+maintainers: 
+  - name: chzbrgr71
+    email: brianisrunning@gmail.com

@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubecon-rating-web
+  labels:
+    name: kubecon-rating-web
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: kubecon-rating-web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubecon-rating-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubecon-rating-web
+  template:
+    metadata:
+      labels:
+        app: kubecon-rating-web
+    spec:
+      imagePullSecrets:
+        - name: acr-secret
+      containers:
+      - name: kubecon-rating-web
+        image: "{{.Values.image}}:{{.Values.imageTag}}"
+        env:
+        - name: SITE_API
+          value: "{{.Values.apiSites}}"
+        - name: SUBJECT_API
+          value: "{{.Values.apiSubjects}}"
+        - name: RATING_API
+          value: "{{.Values.apiRatings}}"
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
