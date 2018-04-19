@@ -17,7 +17,8 @@ events.on("push", (brigadeEvent, project) => {
     
     console.log(`==> gitHub webook with commit ID ${gitSHA}`)
     console.log(`==> logging into Azure with ${azServicePrincipal}`)
-
+    console.log(`==> ${String(today)}`)
+    
     // setup brigade jobs
     var acrBuilder = new Job("job-runner-acr-builder")
     acrBuilder.storage.enabled = false
@@ -26,7 +27,7 @@ events.on("push", (brigadeEvent, project) => {
     acrBuilder.tasks = [
         `cd /src/app/web`,
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
-        `az acr build -t ${acrImage} --build-args BUILD_DATE=${today} VCS_REF=${gitSHA} IMAGE_TAG_REF=${imageTag} -f ./Dockerfile --context . -r ${acrName}`
+        `az acr build -t ${acrImage} --build-args BUILD_DATE=${String(today)} VCS_REF=${gitSHA} IMAGE_TAG_REF=${imageTag} -f ./Dockerfile --context . -r ${acrName}`
     ]
 
     var helmDeploy = new Job("job-runner-helm")
