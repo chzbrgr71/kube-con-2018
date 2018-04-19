@@ -12,7 +12,7 @@ events.on("push", (brigadeEvent, project) => {
     var image = "chzbrgr71/kubecon-rating-web"
     var gitSHA = brigadeEvent.revision.commit.substr(0,7)
     var imageTag = "master-" + String(gitSHA)
-    var acrImage = String(acrServer) + "/" + image + ":" + imageTag
+    var acrImage = image + ":" + imageTag
     
     console.log(`==> gitHub webook with commit ID ${gitSHA}`)
     console.log(`==> logging into Azure with ${azServicePrincipal}`)
