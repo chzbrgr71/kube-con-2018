@@ -31,11 +31,9 @@ events.on("push", (brigadeEvent, project) => {
     var pipeline = new Group()
     pipeline.add(acrBuilder)
     //pipeline.add(helmDeploy)
-    if (brigConfig.get("branch") == "master") {
-        pipeline.runEach()
-    } else {
-        console.log(`==> no jobs to run when not master`)
-    }  
+    
+    pipeline.runEach()
+
 })
 
 events.on("after", (event, proj) => {
