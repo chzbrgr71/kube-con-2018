@@ -41,7 +41,7 @@
       <div class="col-lg-6">
       </div>
       <div class="col-lg-12">
-        <span class="credits">Copenhagen, Denmark</span>
+        <span class="credits">Irvine, CA</span>
       </div>
       <div class="col-lg-6">
       </div>

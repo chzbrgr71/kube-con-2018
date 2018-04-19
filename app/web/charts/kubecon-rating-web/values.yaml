@@ -1,6 +1,6 @@
 # Default values for chart
 image: "briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web"
-imageTag: "master-244069a"
+imageTag: "master-0ce0769"
 apiSites: "http://kubecon-api-sites:8080/"
 apiSubjects: "http://kubecon-api-subjects:8080/"
 apiRatings: "http://kubecon-api-ratings:8080/"

@@ -27,10 +27,18 @@ events.on("push", (brigadeEvent, project) => {
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
         `az acr build -t ${acrImage} -f ./Dockerfile --context . -r ${acrName}`
     ]
-    
+
+    var helmDeploy = new Job("job-runner-helm")
+    helmDeploy.storage.enabled = false
+    helmDeploy.image = "lachlanevenson/k8s-helm:v2.8.2"
+    helmDeploy.tasks = [
+        "cd /src/",
+        `helm upgrade --install --reuse-values kubecon ./app/web/charts/kubecon-rating-web --set image=${acrServer}/${image} --set imageTag=${imageTag}`
+    ]
+
     var pipeline = new Group()
     pipeline.add(acrBuilder)
-    //pipeline.add(helmDeploy)
+    pipeline.add(helmDeploy)
     
     pipeline.runEach()
 

@@ -89,8 +89,4 @@ Brigade pipeline will deploy web front-end.
 
     add in stages. build first. then add helm deploy
 
-    helm upgrade --install --reuse-values kubecon ./app/web/charts/kubecon-rating-web --set image="briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web" --set imageTag="master-244069a"
-
-
-briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web:master-244069a    
-briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web:master-244069a
+    helm upgrade --install --reuse-values kubecon ./app/web/charts/kubecon-rating-web --set image="briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web" --set imageTag="master-0ce0769"
