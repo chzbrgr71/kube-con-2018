@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: kubecon-rating-web
-        image: chzbrgr71/kubecon-rating-web:v2
+        image: chzbrgr71/kubecon-rating-web:v3
         env:
         - name: SITE_API
           value: "http://kubecon-api-sites:8080/"

@@ -16,7 +16,7 @@ def handle(req):
     fromZip = req.values.get('FromZip')
 
     # set target subject based on toPhone
-    if toPhone == "+14124597156":
+    if toPhone == "+14125679951":
         objectID = "5a4f97f0dbbb7e24bd9a15d1"
         language = "Python"
     elif toPhone == "+14124597070":

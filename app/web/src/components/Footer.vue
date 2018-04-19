@@ -14,7 +14,7 @@
       <div class="col-lg-6">
       </div>
       <div class="col-lg-12 credits">
-        Global Azure Bootcamp - Demo 1 2 3
+        KubeCon EU 2018
       </div>
       <div class="col-lg-6">
       </div>
@@ -41,7 +41,7 @@
       <div class="col-lg-6">
       </div>
       <div class="col-lg-12">
-        <span class="credits">K8S INFO:&nbsp;&nbsp;</span><span class="credits-black">{{k8sNodeName}}&nbsp;:&nbsp;{{k8sPodName}}&nbsp;:&nbsp;{{k8sPodIp}} </span>
+        <span class="credits">Copenhagen, Denmark</span>
       </div>
       <div class="col-lg-6">
       </div>
