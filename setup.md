@@ -54,3 +54,29 @@ Brigade pipeline will deploy web front-end.
 
     helm install -n brigade brigade/brigade --set rbac.enabled=false --set vacuum.enabled=false
 
+- Modify `brig-proj-kubecon.yaml`
+    - Set Github path
+    - Set shared "secret"
+    - Set Github token "Personal access tokens"
+    - Set ACR creds (use pre-created ACR instance `briaracrbuild.azurecr.io`)
+
+- Add Brigade project
+
+    helm install --name brig-proj-kubecon-web brigade/brigade-project -f brig-proj-kubecon.yaml
+
+    helm ls
+
+    brig project list
+
+- Setup webhook
+
+    kubectl get svc brigade-brigade-github-gw
+
+    http://52.173.77.241:7744/events/github
+
+- Create `brigade.js` 
+
+    https://github.com/chzbrgr71/python-hello/blob/master/brigade.js
+
+    add in stages. build first. then add helm deploy
+
