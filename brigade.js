@@ -4,8 +4,6 @@ events.on("push", (brigadeEvent, project) => {
     
     // setup variables
     var gitPayload = JSON.parse(brigadeEvent.payload)
-    var brigConfig = new Map()
-    
     var acrServer = project.secrets.acrServer
     var acrName = project.secrets.acrName
     var azServicePrincipal = project.secrets.azServicePrincipal
@@ -22,10 +20,10 @@ events.on("push", (brigadeEvent, project) => {
 
     // setup brigade jobs
     var acrBuilder = new Job("job-runner-acr-builder")
-    d.storage.enabled = false
-    d.privileged = true
-    d.image = "chzbrgr71/azure-cli"
-    d.tasks = [
+    acrBuilder.storage.enabled = false
+    acrBuilder.privileged = true
+    acrBuilder.image = "chzbrgr71/azure-cli"
+    acrBuilder.tasks = [
         `cd /src/app/web`,
         `az login --service-principal -u ${config.get("azServicePrincipal")} -p ${config.get("azClientSecret")} --tenant ${config.get("azTenant")}`,
         `az acr build -t ${acrImage} -f ./Dockerfile --context . -r ${acrName}`
