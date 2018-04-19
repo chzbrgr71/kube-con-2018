@@ -12,10 +12,10 @@ events.on("push", (brigadeEvent, project) => {
     var image = "chzbrgr71/kubecon-rating-web"
     var gitSHA = brigadeEvent.revision.commit.substr(0,7)
     var branch = getBranch(gitPayload)
-    var imageTag = str(branch) + "-" + str(gitSHA)
+    var imageTag = "master-" + str(gitSHA)
     var acrImage = str(acrServer) + "/" + image + ":" + imageTag
     
-    console.log(`==> gitHub webook (${branch}) with commit ID ${gitSHA}`)
+    console.log(`==> gitHub webook with commit ID ${gitSHA}`)
     console.log(`==> logging into Azure with ${azServicePrincipal}`)
 
     // setup brigade jobs
@@ -42,4 +42,3 @@ events.on("push", (brigadeEvent, project) => {
 events.on("after", (event, proj) => {
     console.log("brigade pipeline finished successfully")    
 })
-
