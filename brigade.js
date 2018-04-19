@@ -24,7 +24,7 @@ events.on("push", (brigadeEvent, project) => {
     acrBuilder.image = "chzbrgr71/azure-cli"
     acrBuilder.tasks = [
         `cd /src/app/web`,
-        `az login --service-principal -u ${config.get("azServicePrincipal")} -p ${config.get("azClientSecret")} --tenant ${config.get("azTenant")}`,
+        `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
         `az acr build -t ${acrImage} -f ./Dockerfile --context . -r ${acrName}`
     ]
     
