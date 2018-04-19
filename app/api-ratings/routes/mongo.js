@@ -82,8 +82,17 @@ router.get("/ratings/:sitecode", function(req, res, next) {
         result.average = ratings[i].stars / ratings[i].votes;
         result.halfstar = Math.round((ratings[i].stars / ratings[i].votes)*2)/2;
         output.push(result);
+
+
         console.log(result);
         if (i === ratings.length - 1) {
+          output.sort(function (a, b) {
+            return b.average > a.average
+          });
+  
+          output.sort();
+
+
           var response = new jsonResponse("ok", 200, output);
           res.json(response).status(response.status);
         }

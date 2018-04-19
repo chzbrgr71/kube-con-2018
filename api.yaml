@@ -38,7 +38,7 @@ spec:
               key: uri
         - name: PORT
           value: "8080"
-        image: chzbrgr71/kubecon-api-ratings
+        image: chzbrgr71/kubecon-api-ratings:v2
         imagePullPolicy: Always
         name: kubecon-api-ratings
         ports:
