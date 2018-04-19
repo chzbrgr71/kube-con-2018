@@ -17,7 +17,6 @@ events.on("push", (brigadeEvent, project) => {
     
     console.log(`==> gitHub webook with commit ID ${gitSHA}`)
     console.log(`==> logging into Azure with ${azServicePrincipal}`)
-    console.log(`==> ${String(today)}`)
 
     // setup brigade jobs
     var acrBuilder = new Job("job-runner-acr-builder")

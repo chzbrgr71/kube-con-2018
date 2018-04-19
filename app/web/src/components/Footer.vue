@@ -41,7 +41,6 @@
       <div class="col-lg-6">
       </div>
       <div class="col-lg-12">
-        <span class="credits">Irvine, CA</span>
       </div>
       <div class="col-lg-6">
       </div>
