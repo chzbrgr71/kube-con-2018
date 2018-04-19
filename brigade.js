@@ -9,6 +9,7 @@ events.on("push", (brigadeEvent, project) => {
     var azServicePrincipal = project.secrets.azServicePrincipal
     var azClientSecret = project.secrets.azClientSecret
     var azTenant = project.secrets.azTenant
+    var today = new Date()
     var image = "chzbrgr71/kubecon-rating-web"
     var gitSHA = brigadeEvent.revision.commit.substr(0,7)
     var imageTag = "master-" + String(gitSHA)
@@ -25,7 +26,7 @@ events.on("push", (brigadeEvent, project) => {
     acrBuilder.tasks = [
         `cd /src/app/web`,
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
-        `az acr build -t ${acrImage} -f ./Dockerfile --context . -r ${acrName}`
+        `az acr build -t ${acrImage} --build-args BUILD_DATE=${today} VCS_REF=${gitSHA} IMAGE_TAG_REF=${imageTag} -f ./Dockerfile --context . -r ${acrName}`
     ]
 
     var helmDeploy = new Job("job-runner-helm")
