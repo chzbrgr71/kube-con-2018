@@ -44,20 +44,21 @@ events.on("push", (brigadeEvent, project) => {
 
 })
 
-events.on("after", (event, project) => {
-    console.log("brigade pipeline finished successfully")
-    
-    var twilioSid = project.secrets.twilioSid
-    var twilioToken = project.secrets.twilioToken
+events.on("after", (event, proj) => {
+    console.log("==> brigade pipeline finished successfully")
 
     var twilio = new Job("job-twilio")
     twilio.storage.enabled = false
     twilio.image = "chzbrgr71/twilio-cli"
+    twilio.env = {
+        TWILIO_ACCOUNT_SID: proj.secrets.twilioSid,
+        TWILIO_AUTH_TOKEN: proj.secrets.twilioToken
+    }
+
     //"vidunderlig! brigade rørledning færdiggjort med succes"
     twilio.tasks = [
-        `TWILIO_ACCOUNT_SID=${twilioSid}`,
-        `TWILIO_AUTH_TOKEN=${twilioToken}`,
         `twilio sms to "+14129536948" from "+14125679951" body "hi!"`
     ]
+    twilio.run
 
 })
