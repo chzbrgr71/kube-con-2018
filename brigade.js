@@ -44,7 +44,7 @@ events.on("push", (brigadeEvent, project) => {
 
 })
 
-events.on("after", (event, proj) => {
+events.on("after", (event, project) => {
     console.log("brigade pipeline finished successfully")
     
     var twilioSid = project.secrets.twilioSid
@@ -57,7 +57,7 @@ events.on("after", (event, proj) => {
     twilio.tasks = [
         `TWILIO_ACCOUNT_SID=${twilioSid}`,
         `TWILIO_AUTH_TOKEN=${twilioToken}`,
-        `twilio sms to "+14129536948" from "+14124597156" body "hi!"`
+        `twilio sms to "+14129536948" from "+14125679951" body "hi!"`
     ]
 
 })
