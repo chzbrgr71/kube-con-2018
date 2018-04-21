@@ -14,7 +14,7 @@
       <div class="col-lg-6">
       </div>
       <div class="col-lg-12 credits">
-        KubeCon EU 2018
+        KubeCon EU 2018 Hi!
       </div>
       <div class="col-lg-6">
       </div>
