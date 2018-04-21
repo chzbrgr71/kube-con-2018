@@ -16,7 +16,7 @@ def handle(req):
     fromZip = req.values.get('FromZip')
 
     # set target subject based on toPhone
-    if toPhone == "+14125679951":
+    if toPhone == "+14124597156":
         objectID = "5a4f97f0dbbb7e24bd9a15d1"
         language = "Python"
     elif toPhone == "+14124597070":
@@ -71,6 +71,6 @@ def handle(req):
 
     # create twilio response message
     resp = MessagingResponse()
-    resp.message("Your vote for " + language + " was scored " + str(baseScore) + ". Rating=" + str(rating))
+    resp.message("Your vote for " + language + " was scored " + str(baseScore) + " with Azure Cognitive Services (sentiment). Rating=" + str(rating))
 
     return str(resp)

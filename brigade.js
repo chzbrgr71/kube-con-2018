@@ -21,7 +21,6 @@ events.on("push", (brigadeEvent, project) => {
     // setup brigade jobs
     var acrBuilder = new Job("job-runner-acr-builder")
     acrBuilder.storage.enabled = false
-    acrBuilder.privileged = true
     acrBuilder.image = "chzbrgr71/azure-cli"
     acrBuilder.tasks = [
         `cd /src/app/web`,
@@ -46,5 +45,19 @@ events.on("push", (brigadeEvent, project) => {
 })
 
 events.on("after", (event, proj) => {
-    console.log("brigade pipeline finished successfully")    
+    console.log("brigade pipeline finished successfully")
+    
+    var twilioSid = project.secrets.twilioSid
+    var twilioToken = project.secrets.twilioToken
+
+    var twilio = new Job("job-twilio")
+    twilio.storage.enabled = false
+    twilio.image = "chzbrgr71/twilio-cli"
+    //"vidunderlig! brigade rørledning færdiggjort med succes"
+    twilio.tasks = [
+        `TWILIO_ACCOUNT_SID=${twilioSid}`,
+        `TWILIO_AUTH_TOKEN=${twilioToken}`,
+        `twilio sms to "+14129536948" from "+14124597156" body "hi!"`
+    ]
+
 })
