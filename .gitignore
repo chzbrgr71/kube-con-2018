@@ -4,6 +4,7 @@
 **/.vscode
 
 brig-proj-kubecon.yaml
+brig-proj-kubecon-source.yaml
 
 logs
 *.log
