@@ -69,6 +69,7 @@ Remove stuff from testing:
 * Remove web app from k8s
 * Remove brigade
 * Remove Github webhook
+* Clear ratings collection in CosmosDB
 
 
 ### Live Brigade demo
@@ -127,8 +128,6 @@ Remove stuff from testing:
 
         helm upgrade --install --reuse-values kubecon ./app/web/charts/kubecon-rating-web --set image="briaracrbuild.azurecr.io/chzbrgr71/kubecon-rating-web" --set imageTag="master-0ce0769"
 
-        helm upgrade brig-proj-kubecon-web brigade/brigade-project -f brig-proj-kubecon.yaml
-
     5. Add brigade pipeline group with runEach
     
 - Setup webhook
@@ -140,10 +139,18 @@ Remove stuff from testing:
 
 - Push a change to `Footer.vue`
 
-- Validate pipeline
+- Validate pipeline (split console)
+
+    watch kubectl get pods
 
 - Add Twilio section to `brigade.js`
 
-    twilio sms to "4129536948" from "+14124597156" body "body"
+    - Modify `brig-proj-kubecon.yaml` with Twilio key
+
+        helm upgrade brig-proj-kubecon-web brigade/brigade-project -f brig-proj-kubecon.yaml
+
+    - Add `events.on("after", (event, proj)`
+
+        twilio sms to "4129536948" from "+14124597156" body "body"
 
 - Update and run again
