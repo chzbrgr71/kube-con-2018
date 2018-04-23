@@ -56,7 +56,7 @@ events.on("after", (event, proj) => {
     }
 
     twilio.tasks = [
-        `twilio sms to "+14125679951" from "+14125679951" body "vidunderlig! brigade rørledning færdiggjort med succes"`
+        `twilio sms to "14129536948" from "+14125679951" body "vidunderlig! brigade rørledning færdiggjort med succes"`
     ]
     twilio.run()
 
