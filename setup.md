@@ -66,10 +66,12 @@
 Remove stuff from testing: 
 * Clear brig-proj-kubecon.yaml
 * Clear brigade.js
-* Remove web app from k8s
-* Remove brigade
+* Remove web app from k8s (helm) `helm delete --purge kubecon`
+* Remove brigade (helm) `helm delete --purge brigade`
+* Remove brigade project (helm) `helm delete --purge brig-proj-kubecon-web`
 * Remove Github webhook
 * Clear ratings collection in CosmosDB
+* Delete Brigade history `kubectl delete pods,secrets -l heritage=brigade`
 
 
 ### Live Brigade demo
@@ -78,10 +80,10 @@ Remove stuff from testing:
     With above setup, attendees will text the below phone numbers with votes to build database. Text message should include a sentence describing your "sentiment" for the language. Will be scored and converted to a 1-5 rating scale.
 
     Vote for:
-        +14124597156: Python
-        +14124597070: C#
-        +14124597326: Javascript
-        +14124597436: Golang
+        +1412-459-7156: Python
+        +1412-459-7070: C#
+        +1412-459-7326: Javascript
+        +1412-459-7436: Golang
 
     -> Brigade pipeline will deploy web front-end.
 
@@ -136,6 +138,8 @@ Remove stuff from testing:
 
     http://52.173.77.241:7744/events/github
     http://13.82.212.123:7744/events/github
+
+    http://40.121.201.67:7744/events/github
 
 - Push a change to `Footer.vue`
 
