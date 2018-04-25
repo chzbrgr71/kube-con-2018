@@ -138,7 +138,6 @@ Remove stuff from testing:
 
     http://52.173.77.241:7744/events/github
     http://13.82.212.123:7744/events/github
-
     http://40.121.201.67:7744/events/github
 
 - Push a change to `Footer.vue`
