@@ -1,7 +1,6 @@
 const { events, Job, Group } = require('brigadier')
 
 events.on("push", (brigadeEvent, project) => {
-    
     // setup variables
     var gitPayload = JSON.parse(brigadeEvent.payload)
     var acrServer = project.secrets.acrServer
@@ -27,7 +26,7 @@ events.on("push", (brigadeEvent, project) => {
         `az acr build -t ${acrImage} --build-args BUILD_DATE="${String(today)}" VCS_REF=${gitSHA} IMAGE_TAG_REF=${imageTag} -f ./Dockerfile --context . -r ${acrName}`
     ]
 
-    // setup helm brigade job
+    // brigade job. Helm chart
     var helmDeploy = new Job("job-runner-helm")
     helmDeploy.storage.enabled = false
     helmDeploy.image = "lachlanevenson/k8s-helm:v2.8.2"
@@ -41,22 +40,8 @@ events.on("push", (brigadeEvent, project) => {
     pipeline.add(helmDeploy)
     
     pipeline.runEach()
-
 })
 
 events.on("after", (event, proj) => {
-    console.log("==> brigade pipeline finished successfully")
 
-    var twilio = new Job("job-twilio")
-    twilio.storage.enabled = false
-    twilio.image = "chzbrgr71/twilio-cli"
-    twilio.env = {
-        TWILIO_ACCOUNT_SID: proj.secrets.twilioSid,
-        TWILIO_AUTH_TOKEN: proj.secrets.twilioToken
-    }
-
-    twilio.tasks = [
-        `twilio sms to "+14129536948" from "+14125679951" body "vidunderlig! brigade rørledning færdiggjort med succes"`
-    ]
-    twilio.run()
 })

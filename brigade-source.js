@@ -17,7 +17,7 @@ events.on("push", (brigadeEvent, project) => {
     
     console.log(`==> gitHub webook with commit ID ${gitSHA}`)
 
-    // setup container build brigade job
+    // brigade job. Azure ACR Builder
     var acrBuilder = new Job("job-runner-acr-builder")
     acrBuilder.storage.enabled = false
     acrBuilder.image = "chzbrgr71/azure-cli"
@@ -27,7 +27,7 @@ events.on("push", (brigadeEvent, project) => {
         `az acr build -t ${acrImage} --build-args BUILD_DATE="${String(today)}" VCS_REF=${gitSHA} IMAGE_TAG_REF=${imageTag} -f ./Dockerfile --context . -r ${acrName}`
     ]
 
-    // setup helm brigade job
+    // brigade job. Helm chart
     var helmDeploy = new Job("job-runner-helm")
     helmDeploy.storage.enabled = false
     helmDeploy.image = "lachlanevenson/k8s-helm:v2.8.2"

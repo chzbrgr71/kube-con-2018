@@ -9,6 +9,8 @@
 
 - Start with AKS cluster v1.9.1
 
+- `helm init --upgrade`
+
 - Pre-install API deployments and CosmosDB
     * Create CosmosDB
     * Set connect string in secret
@@ -31,8 +33,9 @@
 
 - OpenFaaS 
     * Follow step here: https://docs.microsoft.com/en-us/azure/aks/openfaas 
-    export FAAS_GW=http://13.89.220.118:8080 (briar-aks-kubecon1)
+    
     export FAAS_GW=http://13.82.92.177:8080 (briar-aks-kubecon2)
+    export FAAS_GW=http://13.82.213.74:8080 (briar-aks-kubecon3)
 
     * Grafana Dashboard
 
@@ -59,7 +62,9 @@
     * Update webhooks in Twilio (4 numbers)
     http://13.89.220.118:8080/function/sms-ratings (briar-aks-kubecon1)
     http://13.82.92.177:8080/function/sms-ratings (briar-aks-kubecon2)
+    http://13.82.213.74:8080/function/sms-ratings (briar-aks-kubecon3)
 
+    * Test a SMS
 
 ### Pre-demo Prep
 
@@ -84,6 +89,8 @@ Remove stuff from testing:
         +1412-459-7070: C#
         +1412-459-7326: Javascript
         +1412-459-7436: Golang
+    
+    -> Show OpenFaaS Grafana Dashboard
 
     -> Brigade pipeline will deploy web front-end.
 
@@ -139,6 +146,7 @@ Remove stuff from testing:
     http://52.173.77.241:7744/events/github
     http://13.82.212.123:7744/events/github
     http://40.121.201.67:7744/events/github
+    http://52.226.22.60:7744/events/github
 
 - Push a change to `Footer.vue`
 
@@ -158,4 +166,6 @@ Remove stuff from testing:
 
 - Update and run again
 
-- Add Kashti
+- Visibility
+    - Run `brigadeterm`
+    - Add Kashti
