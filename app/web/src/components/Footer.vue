@@ -14,7 +14,7 @@
       <div class="col-lg-6">
       </div>
       <div class="col-lg-12 credits">
-        Hamburgers Rock!
+        Cheeseburgers Rock!
       </div>
       <div class="col-lg-6">
       </div>
