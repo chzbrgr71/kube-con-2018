@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <div class="app" bgcolor="black">
+    <div class="app">
       <router-view name="main"></router-view>
       <router-view name="footer"></router-view>
     </div>
@@ -19,7 +19,7 @@ export default {
 
 // main css
 body {
-  background-color: #C00000;
+  background-color: #FF6347;
   --azure-blue: #0071c5;
   --msft-green: #4e7200;
   --msft-orange: #c72b00;

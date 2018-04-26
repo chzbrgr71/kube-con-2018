@@ -148,7 +148,8 @@ Remove stuff from testing:
     http://40.121.201.67:7744/events/github
     http://52.226.22.60:7744/events/github
 
-- Push a change to `Footer.vue`
+- Push a change to `Footer.vue` or `App.vue` 
+    - Colors: #C00000, #FF6347
 
 - Validate pipeline (split console)
 
