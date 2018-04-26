@@ -19,7 +19,7 @@ export default {
 
 // main css
 body {
-  background-color: #323232;
+  background-color: #ccc;
   --azure-blue: #0071c5;
   --msft-green: #4e7200;
   --msft-orange: #c72b00;
@@ -69,13 +69,13 @@ html {
 
 .credits {
   font-family: "Graduate", sans-serif;
-  font-size: 16px;
+  font-size: 24px;
   color: #fff;
 }
 
 .credits-black {
   font-family: "Graduate", sans-serif;
-  font-size: 16px;
+  font-size: 24px;
   color: #CF0;
 }
 
