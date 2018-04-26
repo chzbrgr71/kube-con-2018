@@ -131,7 +131,7 @@ Remove stuff from testing:
 
     3. Add job definition for `az acr build`
         
-        az acr build -t chzbrgr71/kubecon-rating-web:master-123456 --build-args BUILD_DATE="4/19/2018 4:10pm" VCS_REF=741e61b IMAGE_TAG_REF=master-123456 -f ./Dockerfile --context . -r briaracrbuild
+        az acr build -t chzbrgr71/kubecon-rating-web:master-123 --build-arg BUILD_DATE="4/19/2018 4:10pm" VCS_REF=741e60b IMAGE_TAG_REF=master-123 -f ./Dockerfile --context . -r briaracrbuild
 
     4. Add job definition for `helm upgrade`
 
