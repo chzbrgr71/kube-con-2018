@@ -1,7 +1,6 @@
 const { events, Job, Group } = require('brigadier')
 
 events.on("push", (brigadeEvent, project) => {
-    
     // setup variables
     var gitPayload = JSON.parse(brigadeEvent.payload)
     var acrServer = project.secrets.acrServer
@@ -14,23 +13,23 @@ events.on("push", (brigadeEvent, project) => {
     var gitSHA = brigadeEvent.revision.commit.substr(0,7)
     var imageTag = "master-" + String(gitSHA)
     var acrImage = image + ":" + imageTag
-    
+
     console.log(`==> gitHub webook with commit ID ${gitSHA}`)
 
-    // brigade job. Azure ACR Builder
+    // setup container build brigade job
     var acrBuilder = new Job("job-runner-acr-builder")
     acrBuilder.storage.enabled = false
-    acrBuilder.image = "chzbrgr71/azure-cli"
+    acrBuilder.image = "briaracrbuild.azurecr.io/chzbrgr71/azure-cli:v2"
     acrBuilder.tasks = [
         `cd /src/app/web`,
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
-        `az acr build -t ${acrImage} --build-args BUILD_DATE="${String(today)}" VCS_REF=${gitSHA} IMAGE_TAG_REF=${imageTag} -f ./Dockerfile --context . -r ${acrName}`
+        `az acr build -t ${acrImage} --build-arg BUILD_DATE="${String(today)}" --build-arg VCS_REF=${gitSHA} --build-arg IMAGE_TAG_REF=${imageTag} -f ./Dockerfile --context . -r ${acrName}`
     ]
 
     // brigade job. Helm chart
     var helmDeploy = new Job("job-runner-helm")
     helmDeploy.storage.enabled = false
-    helmDeploy.image = "lachlanevenson/k8s-helm:v2.8.2"
+    helmDeploy.image = "briaracrbuild.azurecr.io/chzbrgr71/k8s-helm:v2.8.2"
     helmDeploy.tasks = [
         "cd /src/",
         `helm upgrade --install --reuse-values kubecon ./app/web/charts/kubecon-rating-web --set image=${acrServer}/${image} --set imageTag=${imageTag}`
@@ -41,15 +40,15 @@ events.on("push", (brigadeEvent, project) => {
     pipeline.add(helmDeploy)
     
     pipeline.runEach()
-
 })
 
 events.on("after", (event, proj) => {
     console.log("==> brigade pipeline finished successfully")
 
+    // send SMS message via Twilio
     var twilio = new Job("job-twilio")
     twilio.storage.enabled = false
-    twilio.image = "chzbrgr71/twilio-cli"
+    twilio.image = "briaracrbuild.azurecr.io/chzbrgr71/twilio-cli"
     twilio.env = {
         TWILIO_ACCOUNT_SID: proj.secrets.twilioSid,
         TWILIO_AUTH_TOKEN: proj.secrets.twilioToken
@@ -60,4 +59,24 @@ events.on("after", (event, proj) => {
     ]
     twilio.run()
 
+    // send Twitter DM
+    const sendTo = "SweetDee529"
+
+    const twitter = new Job("tweet", "briaracrbuild.azurecr.io/chzbrgr71/twitter-t")
+    twitter.storage.enabled = false
+
+    twitter.env = {
+        OWNER: p.secrets.OWNER,
+        CONSUMER_KEY: p.secrets.CONSUMER_KEY,
+        CONSUMER_SECRET: p.secrets.CONSUMER_SECRET,
+        ACCESS_TOKEN: p.secrets.ACCESS_TOKEN,
+        ACCESS_SECRET: p.secrets.ACCESS_SECRET
+    }
+
+    twitter.tasks = [
+        "env2creds",
+        `t dm ${sendTo} "${p.name} got event ${e.type}"`
+    ]
+
+    twitter.run()
 })

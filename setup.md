@@ -165,8 +165,12 @@ Remove stuff from testing:
 
         twilio sms to "4129536948" from "+14124597156" body "body"
 
+    - Add Twitter post code
+
 - Update and run again
 
 - Visibility
     - Run `brigadeterm`
+
     - Add Kashti
+        helm install --name kashti ./charts/kashti --set service.type=LoadBalancer --set brigade.apiServer=http://10.0.65.76:7745

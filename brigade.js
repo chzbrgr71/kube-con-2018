@@ -57,4 +57,25 @@ events.on("after", (event, proj) => {
         `twilio sms to "+14129536948" from "+14125679951" body "vidunderlig! brigade rørledning færdiggjort med succes"`
     ]
     twilio.run()
+
+    // send Twitter DM
+    const sendTo = "SweetDee529"
+
+    const twitter = new Job("tweet", "briaracrbuild.azurecr.io/chzbrgr71/twitter-t")
+    twitter.storage.enabled = false
+
+    twitter.env = {
+        OWNER: p.secrets.OWNER,
+        CONSUMER_KEY: p.secrets.CONSUMER_KEY,
+        CONSUMER_SECRET: p.secrets.CONSUMER_SECRET,
+        ACCESS_TOKEN: p.secrets.ACCESS_TOKEN,
+        ACCESS_SECRET: p.secrets.ACCESS_SECRET
+    }
+
+    twitter.tasks = [
+        "env2creds",
+        `t dm ${sendTo} "${p.name} got event ${e.type}"`
+    ]
+
+    twitter.run()
 })
