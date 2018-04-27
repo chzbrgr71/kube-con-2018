@@ -33,9 +33,17 @@
 
 - OpenFaaS 
     * Follow step here: https://docs.microsoft.com/en-us/azure/aks/openfaas 
+
+    cd faas-netes
+    kubectl create namespace openfaas
+    kubectl create namespace openfaas-fn
+
+    helm install --namespace openfaas -n openfaas \
+    --set functionNamespace=openfaas-fn, \
+    --set serviceType=LoadBalancer, \
+    --set rbac=false chart/openfaas/
     
-    export FAAS_GW=http://13.82.92.177:8080 (briar-aks-kubecon2)
-    export FAAS_GW=http://13.82.213.74:8080 (briar-aks-kubecon3)
+    export FAAS_GW=http://$(kubectl get svc --namespace openfaas gateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080
 
     * Grafana Dashboard
 
@@ -60,9 +68,10 @@
     faas-cli build -f ./sms-ratings.yml && faas-cli push -f ./sms-ratings.yml && faas-cli deploy -f ./sms-ratings.yml
 
     * Update webhooks in Twilio (4 numbers)
-    http://13.89.220.118:8080/function/sms-ratings (briar-aks-kubecon1)
-    http://13.82.92.177:8080/function/sms-ratings (briar-aks-kubecon2)
-    http://13.82.213.74:8080/function/sms-ratings (briar-aks-kubecon3)
+
+    export TWILIO_WEBHOOK=http://$(kubectl get svc --namespace openfaas gateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080/function/sms-ratings
+
+    echo $TWILIO_WEBHOOK
 
     * Test a SMS
 

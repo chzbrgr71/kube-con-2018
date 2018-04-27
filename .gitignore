@@ -5,6 +5,7 @@
 
 brig-proj-kubecon.yaml
 brig-proj-kubecon-source.yaml
+brig-proj-kubecon-source-eu.yaml
 
 logs
 *.log
