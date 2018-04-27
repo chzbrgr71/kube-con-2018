@@ -76,10 +76,6 @@ export default {
           this.$Notify({ title: `Seriously?`, message: `He's just a rich guy. Zero super powers. Altrustic? Yes. Not a Superhero. Are you a PM?`, type: 'warning', duration: 10000 })
         }
       },
-      getIp: function() {this.$http.get('https://ipinfo.io/json').then(response =>{
-        console.log(response)
-      })},
-
       submitRatings() {
         var rate = {}
         var refs = this.$refs
