@@ -10,7 +10,7 @@ ENV IMAGE_TAG $IMAGE_TAG_REF
 
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm install
+RUN yarn install
 
 COPY . .
 RUN apk --no-cache add curl
