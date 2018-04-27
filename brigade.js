@@ -74,8 +74,8 @@ events.on("after", (event, project) => {
 
     twitter.tasks = [
         "env2creds",
-        //`t dm ${sendTo} "vidunderlig! brigade ${project.name} rørledning færdiggjort med succes"`
-        `t update "I'm tweeting from Brigade. Fake news."`
+        `t dm ${sendTo} "vidunderlig! brigade rørledning færdiggjort med succes"`
+        //`t update "I'm tweeting from Brigade. Fake news."`
     ]
 
     twitter.run()
