@@ -42,16 +42,15 @@ events.on("push", (brigadeEvent, project) => {
     pipeline.runEach()
 })
 
-events.on("after", (event, proj) => {
+events.on("after", (event, project) => {
     console.log("==> brigade pipeline finished successfully")
 
-    // send SMS message via Twilio
     var twilio = new Job("job-twilio")
     twilio.storage.enabled = false
     twilio.image = "briaracrbuild.azurecr.io/chzbrgr71/twilio-cli"
     twilio.env = {
-        TWILIO_ACCOUNT_SID: proj.secrets.twilioSid,
-        TWILIO_AUTH_TOKEN: proj.secrets.twilioToken
+        TWILIO_ACCOUNT_SID: project.secrets.twilioSid,
+        TWILIO_AUTH_TOKEN: project.secrets.twilioToken
     }
 
     twilio.tasks = [
@@ -66,16 +65,17 @@ events.on("after", (event, proj) => {
     twitter.storage.enabled = false
 
     twitter.env = {
-        OWNER: p.secrets.OWNER,
-        CONSUMER_KEY: p.secrets.CONSUMER_KEY,
-        CONSUMER_SECRET: p.secrets.CONSUMER_SECRET,
-        ACCESS_TOKEN: p.secrets.ACCESS_TOKEN,
-        ACCESS_SECRET: p.secrets.ACCESS_SECRET
+        OWNER: project.secrets.OWNER,
+        CONSUMER_KEY: project.secrets.CONSUMER_KEY,
+        CONSUMER_SECRET: project.secrets.CONSUMER_SECRET,
+        ACCESS_TOKEN: project.secrets.ACCESS_TOKEN,
+        ACCESS_SECRET: project.secrets.ACCESS_SECRET
     }
 
     twitter.tasks = [
         "env2creds",
-        `t dm ${sendTo} "${p.name} got event ${e.type}"`
+        `t dm ${sendTo} "vidunderlig! brigade rørledning færdiggjort med succes"`
+        //`t update "I'm tweeting from Brigade. Fake news."`
     ]
 
     twitter.run()

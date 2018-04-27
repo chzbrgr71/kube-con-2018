@@ -58,25 +58,4 @@ events.on("after", (event, project) => {
     ]
     twilio.run()
 
-    // send Twitter DM
-    const sendTo = "SweetDee529"
-
-    const twitter = new Job("tweet", "briaracrbuild.azurecr.io/chzbrgr71/twitter-t")
-    twitter.storage.enabled = false
-
-    twitter.env = {
-        OWNER: project.secrets.OWNER,
-        CONSUMER_KEY: project.secrets.CONSUMER_KEY,
-        CONSUMER_SECRET: project.secrets.CONSUMER_SECRET,
-        ACCESS_TOKEN: project.secrets.ACCESS_TOKEN,
-        ACCESS_SECRET: project.secrets.ACCESS_SECRET
-    }
-
-    twitter.tasks = [
-        "env2creds",
-        `t dm ${sendTo} "vidunderlig! brigade rørledning færdiggjort med succes"`
-        //`t update "I'm tweeting from Brigade. Fake news."`
-    ]
-
-    twitter.run()
 })
