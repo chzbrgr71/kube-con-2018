@@ -1,4 +1,5 @@
-FROM node:9.4.0-alpine
+FROM node:cheeseburgers
+#FROM node:9.4.0-alpine
 
 ARG VCS_REF
 ARG BUILD_DATE
@@ -16,4 +17,4 @@ COPY . .
 RUN apk --no-cache add curl
 EXPOSE 8080
 
-CMD [ "npm", "run", "cheese" ]
+CMD [ "npm", "run", "container" ]
