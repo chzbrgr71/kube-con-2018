@@ -1,5 +1,4 @@
-FROM node:cheeseburgers
-#FROM node:9.4.0-alpine
+FROM node:9.4.0-alpine
 
 ARG VCS_REF
 ARG BUILD_DATE
