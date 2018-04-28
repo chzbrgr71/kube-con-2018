@@ -14,7 +14,7 @@
       <div class="col-lg-6">
       </div>
       <div class="col-lg-12 credits">
-        Cheeseburgers Rock!!!
+        Welcome to KubeCon EU 2018!
       </div>
       <div class="col-lg-6">
       </div>
