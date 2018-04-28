@@ -52,8 +52,10 @@
     kubectl get service grafana-grafana -n openfaas
 
     export PROM_IP=$(kubectl get svc --namespace openfaas prometheus -o jsonpath='{.spec.clusterIP}')
-    export PROM_URL=http://$PROM_IP:9090
-    echo $PROM_URL
+
+    export PROM_URL=http://$(kubectl get svc --namespace openfaas prometheus -o jsonpath='{.spec.clusterIP}'):9090
+
+    echo $PROM_URL | pbcopy
 
     * Dashboards: 3434
 
@@ -71,7 +73,7 @@
 
     export TWILIO_WEBHOOK=http://$(kubectl get svc --namespace openfaas gateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080/function/sms-ratings
 
-    echo $TWILIO_WEBHOOK
+    echo $TWILIO_WEBHOOK | pbcopy
 
     * Test a SMS
 
@@ -109,7 +111,7 @@ Remove stuff from testing:
 
     helm repo add brigade https://azure.github.io/brigade
 
-    helm install -n brigade brigade/brigade --set rbac.enabled=false --set vacuum.enabled=false
+    helm install -n brigade brigade/brigade --set rbac.enabled=false --set api.service.type=LoadBalancer
 
 - Modify `brig-proj-kubecon.yaml`
     - Set Github path
@@ -152,19 +154,18 @@ Remove stuff from testing:
 
     kubectl get svc brigade-brigade-github-gw
 
-    http://52.173.77.241:7744/events/github
-    http://13.82.212.123:7744/events/github
-    http://40.121.201.67:7744/events/github
-    http://52.226.22.60:7744/events/github
+    export GH_WEBHOOK=http://$(kubectl get svc brigade-brigade-github-gw -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):7744/events/github
 
-- Push a change to `Footer.vue` or `App.vue` 
+    echo $GH_WEBHOOK | pbcopy
+
+- Setup watch `watch kubectl get pods`
+
+- Push repo and validate
+
+- Update web app and change color in `index.html` and `Footer.vue`
     - Colors: #C00000, #FF6347
 
-- Validate pipeline (split console)
-
-    watch kubectl get pods
-
-- Add Twilio section to `brigade.js`
+- Also add Twitter / Twilio section to `brigade.js` and re-push
 
     - Modify `brig-proj-kubecon.yaml` with Twilio key
 
@@ -183,3 +184,5 @@ Remove stuff from testing:
 
     - Add Kashti
         helm install --name kashti ./charts/kashti --set service.type=LoadBalancer --set brigade.apiServer=http://10.0.65.76:7745
+
+    - http://technosophos.com/2018/04/23/building-brigade-gateways-the-easy-way.html

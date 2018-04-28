@@ -2,12 +2,12 @@ const { events, Job, Group } = require('brigadier')
 
 events.on("push", (brigadeEvent, project) => {
     // setup variables
-    var gitPayload = JSON.parse(brigadeEvent.payload)
     var acrServer = project.secrets.acrServer
     var acrName = project.secrets.acrName
     var azServicePrincipal = project.secrets.azServicePrincipal
     var azClientSecret = project.secrets.azClientSecret
     var azTenant = project.secrets.azTenant
+    var gitPayload = JSON.parse(brigadeEvent.payload)
     var today = new Date()
     var image = "chzbrgr71/kubecon-rating-web"
     var gitSHA = brigadeEvent.revision.commit.substr(0,7)
@@ -19,7 +19,7 @@ events.on("push", (brigadeEvent, project) => {
     // setup container build brigade job
     var acrBuilder = new Job("job-runner-acr-builder")
     acrBuilder.storage.enabled = false
-    acrBuilder.image = "briaracrbuild.azurecr.io/chzbrgr71/azure-cli:v2"
+    acrBuilder.image = "briaracreu.azurecr.io/chzbrgr71/azure-cli:v2"
     acrBuilder.tasks = [
         `cd /src/app/web`,
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
@@ -29,10 +29,10 @@ events.on("push", (brigadeEvent, project) => {
     // brigade job. Helm chart
     var helmDeploy = new Job("job-runner-helm")
     helmDeploy.storage.enabled = false
-    helmDeploy.image = "briaracrbuild.azurecr.io/chzbrgr71/k8s-helm:v2.8.2"
+    helmDeploy.image = "briaracreu.azurecr.io/chzbrgr71/k8s-helm:v2.8.2"
     helmDeploy.tasks = [
-        "cd /src/",
-        `helm upgrade --install --reuse-values kubecon ./app/web/charts/kubecon-rating-web --set image=${acrServer}/${image} --set imageTag=${imageTag}`
+        //"cd /src/",
+        `helm upgrade --install --reuse-values kubecon ./src/app/web/charts/kubecon-rating-web --set image=${acrServer}/${image} --set imageTag=${imageTag}`
     ]
 
     var pipeline = new Group()
@@ -47,7 +47,7 @@ events.on("after", (event, project) => {
 
     var twilio = new Job("job-twilio")
     twilio.storage.enabled = false
-    twilio.image = "briaracrbuild.azurecr.io/chzbrgr71/twilio-cli"
+    twilio.image = "briaracreu.azurecr.io/chzbrgr71/twilio-cli"
     twilio.env = {
         TWILIO_ACCOUNT_SID: project.secrets.twilioSid,
         TWILIO_AUTH_TOKEN: project.secrets.twilioToken
@@ -61,7 +61,7 @@ events.on("after", (event, project) => {
     // send Twitter DM
     const sendTo = "SweetDee529"
 
-    const twitter = new Job("tweet", "briaracrbuild.azurecr.io/chzbrgr71/twitter-t")
+    const twitter = new Job("tweet", "briaracreu.azurecr.io/chzbrgr71/twitter-t")
     twitter.storage.enabled = false
 
     twitter.env = {
