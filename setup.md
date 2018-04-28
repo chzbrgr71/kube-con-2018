@@ -185,4 +185,5 @@ Remove stuff from testing:
     - Add Kashti
         helm install --name kashti ./charts/kashti --set service.type=LoadBalancer --set brigade.apiServer=http://10.0.65.76:7745
 
-    - http://technosophos.com/2018/04/23/building-brigade-gateways-the-easy-way.html
+    - Easy creation of Brigade GW
+    http://technosophos.com/2018/04/23/building-brigade-gateways-the-easy-way.html

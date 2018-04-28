@@ -65,6 +65,6 @@ events.on("after", (event, project) => {
         //`t update "I'm tweeting from Brigade. Fake news."`
     ]
 
-    twitter.run()
+    //twitter.run()
 
 })

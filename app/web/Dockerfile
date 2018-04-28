@@ -16,4 +16,4 @@ COPY . .
 RUN apk --no-cache add curl
 EXPOSE 8080
 
-CMD [ "npm", "run", "container" ]
+CMD [ "npm", "run", "cheese" ]
