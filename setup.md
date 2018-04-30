@@ -45,6 +45,8 @@
     
     export FAAS_GW=http://$(kubectl get svc --namespace openfaas gateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080
 
+    echo $FAAS_GW
+
     * Grafana Dashboard
 
     helm install --name grafana stable/grafana --version 0.5.1 --set server.service.type=LoadBalancer,server.adminUser=admin,server.adminPassword=Your@Password,server.image=grafana/grafana:4.6.3,server.persistentVolume.enabled=false --namespace openfaas
@@ -74,6 +76,8 @@
     export TWILIO_WEBHOOK=http://$(kubectl get svc --namespace openfaas gateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080/function/sms-ratings
 
     echo $TWILIO_WEBHOOK | pbcopy
+
+    http://twilio.brianredmond.io:8080/function/sms-ratings
 
     * Test a SMS
 
