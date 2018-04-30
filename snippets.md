@@ -1,8 +1,28 @@
-const { events, Job, Group } = require('brigadier')
+### brigage install
 
-events.on("push", (brigadeEvent, project) => {
+helm repo add brigade https://azure.github.io/brigade
+    
+helm install -n brigade brigade/brigade --set rbac.enabled=false --set api.service.type=LoadBalancer
+
+### brigade project
+
+github:
+    token: "a9257112d6b98afb7c49f1852524e02e6a9c9a26"
+secrets:
+    acrServer: briaracreu.azurecr.io
+    acrName: briaracreu
+    azServicePrincipal: "http://briar-aks-contrib"
+    azClientSecret: "4cfb1f4d-77e4-469e-a2b8-d143cfceab8c"
+    azTenant: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+
+helm install --name brig-proj-kubecon-web brigade/brigade-project -f brig-proj-kubecon.yaml
+
+### brigade.js
+
+1. 
     // variables
     var acrServer = project.secrets.acrServer
+2. 
     var acrName = project.secrets.acrName
     var azServicePrincipal = project.secrets.azServicePrincipal
     var azClientSecret = project.secrets.azClientSecret
@@ -13,11 +33,11 @@ events.on("push", (brigadeEvent, project) => {
     var gitSHA = brigadeEvent.revision.commit.substr(0,7)
     var imageTag = "master-" + String(gitSHA)
     var acrImage = image + ":" + imageTag
-
+3. 
     console.log(`==> gitHub webook with commit ID ${gitSHA}`)
-
-    // setup container build brigade job
+4. 
     var acrBuilder = new Job("job-runner-acr-builder")
+5. 
     acrBuilder.storage.enabled = false
     acrBuilder.image = "briaracreu.azurecr.io/chzbrgr71/azure-cli:0.0.5"
     acrBuilder.tasks = [
@@ -25,57 +45,23 @@ events.on("push", (brigadeEvent, project) => {
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
         `az acr build -t ${acrImage} --build-arg BUILD_DATE="${String(today)}" --build-arg VCS_REF=${gitSHA} --build-arg IMAGE_TAG_REF=${imageTag} -f ./Dockerfile --context . -r ${acrName}`
     ]
-
-    // brigade job. Helm chart
+6. 
     var helmDeploy = new Job("job-runner-helm")
     helmDeploy.storage.enabled = false
     helmDeploy.image = "briaracreu.azurecr.io/chzbrgr71/k8s-helm:v2.8.2"
     helmDeploy.tasks = [
         `helm upgrade --install --reuse-values kubecon ./src/app/web/charts/kubecon-rating-web --set image=${acrServer}/${image} --set imageTag=${imageTag}`
     ]
-
+7. 
     var pipeline = new Group()
     pipeline.add(acrBuilder)
     pipeline.add(helmDeploy)
     
     pipeline.runEach()
-})
+8. 
+    export GH_WEBHOOK=http://$(kubectl get svc brigade-brigade-github-gw -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):7744/events/github
 
-events.on("after", (event, project) => {
-    console.log("==> brigade pipeline finished successfully")
+    echo $GH_WEBHOOK | pbcopy
+9. 
 
-    var twilio = new Job("job-twilio")
-    twilio.storage.enabled = false
-    twilio.image = "briaracreu.azurecr.io/chzbrgr71/twilio-cli"
-    twilio.env = {
-        TWILIO_ACCOUNT_SID: project.secrets.twilioSid,
-        TWILIO_AUTH_TOKEN: project.secrets.twilioToken
-    }
 
-    twilio.tasks = [
-        `twilio sms to "+14129536948" from "+14125679951" body "vidunderlig! brigade rørledning færdiggjort med succes"`
-    ]
-    twilio.run()
-
-    // send Twitter DM
-    const sendTo = "SweetDee529"
-
-    const twitter = new Job("tweet", "briaracreu.azurecr.io/chzbrgr71/twitter-t")
-    twitter.storage.enabled = false
-
-    twitter.env = {
-        OWNER: project.secrets.OWNER,
-        CONSUMER_KEY: project.secrets.CONSUMER_KEY,
-        CONSUMER_SECRET: project.secrets.CONSUMER_SECRET,
-        ACCESS_TOKEN: project.secrets.ACCESS_TOKEN,
-        ACCESS_SECRET: project.secrets.ACCESS_SECRET
-    }
-
-    twitter.tasks = [
-        "env2creds",
-        `t dm ${sendTo} "vidunderlig! brigade rørledning færdiggjort med succes"`
-        //`t update "I'm tweeting from Brigade. Fake news."`
-    ]
-
-    twitter.run()
-})
