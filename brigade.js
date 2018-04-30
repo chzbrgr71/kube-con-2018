@@ -44,7 +44,7 @@ events.on("push", (brigadeEvent, project) => {
 })
 
 events.on("after", (event, project) => {
-
+    const sendTo = "SweetDee529"
     const twitter = new Job("tweet", "briaracreu.azurecr.io/chzbrgr71/twitter-t")
     twitter.storage.enabled = false
 
