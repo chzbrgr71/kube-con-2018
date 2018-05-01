@@ -14,7 +14,7 @@
       <div class="col-lg-6">
       </div>
       <div class="col-lg-12 credits">
-        Welcome to Azure Container Day Denmark!
+        Welcome to KubeCon 2018 @ København!
       </div>
       <div class="col-lg-6">
       </div>

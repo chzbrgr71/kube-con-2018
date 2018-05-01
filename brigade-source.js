@@ -17,26 +17,26 @@ events.on("push", (brigadeEvent, project) => {
     console.log(`==> gitHub webook with commit ID ${gitSHA}`)
 
     // setup container build brigade job
-    var acrBuilder = new Job("job-runner-acr-builder")
-    acrBuilder.storage.enabled = false
-    acrBuilder.image = "briaracreu.azurecr.io/chzbrgr71/azure-cli:0.0.5"
-    acrBuilder.tasks = [
+    var acr = new Job("job-runner-acr-builder")
+    acr.storage.enabled = false
+    acr.image = "briaracreu.azurecr.io/chzbrgr71/azure-cli:0.0.5"
+    acr.tasks = [
         `cd /src/app/web`,
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
         `az acr build -t ${acrImage} --build-arg BUILD_DATE="${String(today)}" --build-arg VCS_REF=${gitSHA} --build-arg IMAGE_TAG_REF=${imageTag} -f ./Dockerfile --context . -r ${acrName}`
     ]
 
     // brigade job. Helm chart
-    var helmDeploy = new Job("job-runner-helm")
-    helmDeploy.storage.enabled = false
-    helmDeploy.image = "briaracreu.azurecr.io/chzbrgr71/k8s-helm:v2.8.2"
-    helmDeploy.tasks = [
+    var helm = new Job("job-runner-helm")
+    helm.storage.enabled = false
+    helm.image = "briaracreu.azurecr.io/chzbrgr71/k8s-helm:v2.8.2"
+    helm.tasks = [
         `helm upgrade --install --reuse-values kubecon ./src/app/web/charts/kubecon-rating-web --set image=${acrServer}/${image} --set imageTag=${imageTag}`
     ]
 
     var pipeline = new Group()
-    pipeline.add(acrBuilder)
-    pipeline.add(helmDeploy)
+    pipeline.add(acr)
+    pipeline.add(helm)
     
     pipeline.runEach()
 })
@@ -58,7 +58,8 @@ events.on("after", (event, project) => {
     twilio.run()
 
     // send Twitter DM
-    const sendTo = "SweetDee529"
+    const sendTo = ""
+    const tweet = "Live Tweet from Brigade at KubeCon EU 2018! brigade rørledning færdiggjort med succes"
 
     const twitter = new Job("tweet", "briaracreu.azurecr.io/chzbrgr71/twitter-t")
     twitter.storage.enabled = false
@@ -73,8 +74,8 @@ events.on("after", (event, project) => {
 
     twitter.tasks = [
         "env2creds",
-        `t dm ${sendTo} "vidunderlig! brigade rørledning færdiggjort med succes"`
-        //`t update "I'm tweeting from Brigade. Fake news."`
+        //`t dm ${sendTo} ""`
+        `t update ${tweet}`
     ]
 
     twitter.run()
