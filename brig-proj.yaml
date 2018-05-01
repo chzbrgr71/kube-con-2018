@@ -1,0 +1,17 @@
+project: "chzbrgr71/kube-con-2018"
+repository: "github.com/chzbrgr71/kube-con-2018"
+cloneURL: "https://github.com/chzbrgr71/kube-con-2018"
+sharedSecret: "MySuperSecretPassword"
+github:
+    token: ""
+secrets:
+    acrServer: 
+    acrName: 
+    azServicePrincipal: 
+    azClientSecret: 
+    azTenant: 
+    OWNER: chzbrgr71
+    CONSUMER_KEY: 
+    CONSUMER_SECRET: 
+    ACCESS_TOKEN: 
+    ACCESS_SECRET: 
