@@ -28,8 +28,8 @@ events.on("push", (brigadeEvent, project) => {
 
     var helm = new Job("job-runner-helm")
     helm.storage.enabled = false
-    helmDeploy.image = "briaracreu.azurecr.io/chzbrgr71/k8s-helm:v2.8.2"
-    helmDeploy.tasks = [
+    helm.image = "briaracreu.azurecr.io/chzbrgr71/k8s-helm:v2.8.2"
+    helm.tasks = [
         `helm upgrade --install --reuse-values kubecon ./src/app/web/charts/kubecon-rating-web --set image=${acrServer}/${image} --set imageTag=${imageTag}`
     ]
 
