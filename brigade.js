@@ -42,8 +42,6 @@ events.on("push", (brigadeEvent, project) => {
 
 events.on("after", (event, project) => {
     
-    const tweet = "Live Tweet from Brigade at KubeCon EU 2018! brigade rørledning færdiggjort med succes"
-    
     const twitter = new Job("tweet", "briaracreu.azurecr.io/chzbrgr71/twitter-t")
     twitter.storage.enabled = false
 
@@ -57,8 +55,7 @@ events.on("after", (event, project) => {
 
     twitter.tasks = [
         "env2creds",
-        //`t dm ${sendTo} ""`
-        `t update ${tweet}`
+        `t update "Live Tweet from Brigade at KubeCon EU 2018! brigade rørledning færdiggjort med succes`
     ]
 
     twitter.run()
