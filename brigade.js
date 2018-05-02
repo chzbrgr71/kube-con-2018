@@ -33,10 +33,6 @@ events.on("push", (brigadeEvent, project) => {
         `helm upgrade --install --reuse-values kubecon ./src/app/web/charts/kubecon-rating-web --set image=${acrServer}/${image} --set imageTag=${imageTag}`
     ]
 
-    var pipeline = new Group()
-    pipeline.add(acr)
-    pipeline.add(helm)
-    pipeline.runEach()
 
 })
 
@@ -55,7 +51,7 @@ events.on("after", (event, project) => {
 
     twitter.tasks = [
         "env2creds",
-        `t update "Live Tweet from Brigade at KubeCon EU 2018! brigade rørledning færdiggjort med succes`
+        `t update "Live Tweet from Brigade at KubeCon EU 2018! brigade rørledning færdiggjort med succes"`
     ]
 
     twitter.run()
