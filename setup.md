@@ -7,9 +7,11 @@
     docker build -t chzbrgr71/kubecon-api-subjects:v4 .
     docker build --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` --build-arg VCS_REF=`git rev-parse --short HEAD` --build-arg IMAGE_TAG_REF=v4 -t chzbrgr71/kubecon-rating-web:v4 .
 
-- Start with AKS cluster v1.9.1
+- Start with AKS cluster v1.9.1 or better
 
 - `helm init --upgrade`
+- `kubectl -n kube-system delete deploy tiller-deploy`
+- `helm init --service-account default`
 
 - Pre-install API deployments and CosmosDB
     * Create CosmosDB
@@ -21,7 +23,7 @@
     * Install APIs
     kubectl apply -f api.yaml
 
-- Create secret for ACR (in Cloud Shell)
+- Create secret for ACR (optional)
 
     -> this step is not needed if service principal for AKS has rights
 
@@ -53,8 +55,6 @@
 
     kubectl get service grafana-grafana -n openfaas
 
-    export PROM_IP=$(kubectl get svc --namespace openfaas prometheus -o jsonpath='{.spec.clusterIP}')
-
     export PROM_URL=http://$(kubectl get svc --namespace openfaas prometheus -o jsonpath='{.spec.clusterIP}'):9090
 
     echo $PROM_URL | pbcopy
@@ -67,7 +67,7 @@
 
     brew install faas-cli (if needed)
     
-    cd /Users/brianredmond/gopath/src/github.com/chzbrgr71/kube-con-2018/open-faas/sms-ratings
+    cd ./sms-ratings
 
     faas-cli build -f ./sms-ratings.yml && faas-cli push -f ./sms-ratings.yml && faas-cli deploy -f ./sms-ratings.yml
 
@@ -76,8 +76,6 @@
     export TWILIO_WEBHOOK=http://$(kubectl get svc --namespace openfaas gateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080/function/sms-ratings
 
     echo $TWILIO_WEBHOOK | pbcopy
-
-    http://twilio.brianredmond.io:8080/function/sms-ratings
 
     * Test a SMS
 
@@ -138,9 +136,9 @@ Remove stuff from testing:
     Add in stages. build first. then add helm deploy
 
     1. Start with variable creation
-        - gitPayload
         - ACR secrets
         - AZ secrets
+        - gitPayload
         - imageTag details
 
     2. Write a log message with `console.log`
@@ -167,28 +165,67 @@ Remove stuff from testing:
 
 - Push repo and validate
 
-- Update web app and change color in `index.html` and `Footer.vue`
-    - Colors: #C00000, #FF6347
+- Show kashti / `brigadeterm`
+
+    helm install --name kashti ./charts/kashti --set service.type=LoadBalancer --set brigade.apiServer=http://10.0.65.76:7745
+
+- Show app deployed
+
+- Update web app and change color in `index.html`
 
 - Also add Twitter / Twilio section to `brigade.js` and re-push
 
-    - Modify `brig-proj-kubecon.yaml` with Twilio key
+    - Modify `brig-proj-kubecon.yaml` with keys
 
         helm upgrade brig-proj-kubecon-web brigade/brigade-project -f brig-proj-kubecon.yaml
 
     - Add `events.on("after", (event, proj)`
 
-        twilio sms to "4129536948" from "+14124597156" body "body"
-
-    - Add Twitter post code
+    - Add Twilio or Twitter post code
 
 - Update and run again
 
-- Visibility
-    - Run `brigadeterm`
-
-    - Add Kashti
-        helm install --name kashti ./charts/kashti --set service.type=LoadBalancer --set brigade.apiServer=http://10.0.65.76:7745
-
-    - Easy creation of Brigade GW
+- Easy creation of Brigade GW
     http://technosophos.com/2018/04/23/building-brigade-gateways-the-easy-way.html
+
+    * Draft setup
+    az acr login -n briaracreu -g briaracr
+    
+    draft config set registry briaracreu.azurecr.io
+    draft config set registry briaracrbuild.azurecr.io
+
+    draft pack-repo add https://github.com/technosophos/draft-brigade
+
+    mkdir mygateway
+    cd mygateway
+    draft create -p brigade-gateway
+
+    draft up --auto-connect
+
+    draft up && draft connect
+
+    curl http://localhost:60929/healthz
+
+    * Brig Simple Project
+    cd brigade
+    helm install brigade/brigade-project -n empty-testbed -f emptytestproj.yaml
+
+    brig project list
+
+    PORT=62388
+
+    curl -XPOST http://localhost:$PORT/v1/webhook/myevent/brigade-3920c21d6f4e7ca1864c701267bd873cd1f35c99b344baad56604f -d "hello"
+
+    draft.toml:
+    
+    [environments]
+      [environments.development]
+        name = "mygateway"
+        namespace = "default"
+        wait = true
+        watch = false
+        watch-delay = 2
+        auto-connect = true
+        dockerfile = ""
+        chart = ""
+        override-ports = ["8080:8080"]

@@ -10,8 +10,3 @@ secrets:
     azServicePrincipal: 
     azClientSecret: 
     azTenant: 
-    OWNER: chzbrgr71
-    CONSUMER_KEY: 
-    CONSUMER_SECRET: 
-    ACCESS_TOKEN: 
-    ACCESS_SECRET: 
