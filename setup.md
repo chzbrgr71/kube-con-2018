@@ -82,15 +82,15 @@
 ### Pre-demo Prep
 
 Remove stuff from testing: 
-* Clear brig-proj-kubecon.yaml
+* Clear brig-proj.yaml
 * Clear brigade.js
 * Remove web app from k8s (helm) `helm delete --purge kubecon`
 * Remove brigade (helm) `helm delete --purge brigade`
 * Remove kashti `helm delete --purge kashti`
 * Remove brigade project (helm) `helm delete --purge brig-proj-kubecon-web`
+* Delete Brigade history `kubectl delete pods,secrets -l heritage=brigade`
 * Remove Github webhook
 * Clear ratings collection in CosmosDB
-* Delete Brigade history `kubectl delete pods,secrets -l heritage=brigade`
 
 
 ### Live Brigade demo
