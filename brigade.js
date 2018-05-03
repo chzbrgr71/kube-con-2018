@@ -45,4 +45,21 @@ events.on("push", (brigadeEvent, project) => {
 events.on("after", (event, project) => {
     console.log("==> brigade pipeline finished successfully")
     
+    const twitter = new Job("tweet", "briaracreu.azurecr.io/chzbrgr71/twitter-t")
+twitter.storage.enabled = false
+
+twitter.env = {
+    OWNER: project.secrets.OWNER,
+    CONSUMER_KEY: project.secrets.CONSUMER_KEY,
+    CONSUMER_SECRET: project.secrets.CONSUMER_SECRET,
+    ACCESS_TOKEN: project.secrets.ACCESS_TOKEN,
+    ACCESS_SECRET: project.secrets.ACCESS_SECRET
+}
+
+twitter.tasks = [
+    "env2creds",
+    `t update "Live Tweet from Brigade at KubeCon EU 2018! brigade rørledning færdiggjort med succes"`
+]
+
+twitter.run()
 })
