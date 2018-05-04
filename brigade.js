@@ -59,5 +59,5 @@ events.on("after", (event, project) => {
         `t update "Live Tweet from Brigade at KubeCon EU 2018! brigade rørledning færdiggjort med succes"`
     ]
 
-    twitter.run()
+    //twitter.run()
 })
