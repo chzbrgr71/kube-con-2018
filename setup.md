@@ -2,40 +2,48 @@
 
 ### Pre-setup
 - Docker containers
-    docker build -t chzbrgr71/kubecon-api-ratings:v4 .
-    docker build -t chzbrgr71/kubecon-api-sites:v4 .
-    docker build -t chzbrgr71/kubecon-api-subjects:v4 .
-    docker build --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` --build-arg VCS_REF=`git rev-parse --short HEAD` --build-arg IMAGE_TAG_REF=v4 -t chzbrgr71/kubecon-rating-web:v4 .
+
+```
+docker build -t chzbrgr71/kubecon-api-ratings:v4 .
+docker build -t chzbrgr71/kubecon-api-sites:v4 .
+docker build -t chzbrgr71/kubecon-api-subjects:v4 .
+docker build --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` --build-arg VCS_REF=`git rev-parse --short HEAD` --build-arg IMAGE_TAG_REF=v4 -t chzbrgr71/kubecon-rating-web:v4 .
+```
 
 - Start with AKS cluster v1.9.1 or better
 
-- `helm init --upgrade`
-- `kubectl -n kube-system delete deploy tiller-deploy`
-- `helm init --service-account default`
+```
+helm init --upgrade`
+kubectl -n kube-system delete deploy tiller-deploy
+helm init --service-account default
+```
 
 - Pre-install API deployments and CosmosDB
+
     * Create CosmosDB
     * Set connect string in secret
 
-    kubectl create secret generic cosmos-db-secret --from-literal=uri=''
-    (use command from Notes)
+    ```kubectl create secret generic cosmos-db-secret --from-literal=uri=''```
 
     * Install APIs
-    kubectl apply -f api.yaml
+    ```kubectl apply -f api.yaml```
 
 - Create secret for ACR (optional)
 
     -> this step is not needed if service principal for AKS has rights
 
-    export ACR_SERVER=
-    export ACR_USER=
-    export ACR_PWD=
+```
+export ACR_SERVER=
+export ACR_USER=
+export ACR_PWD=
 
-    kubectl create secret docker-registry acr-secret --docker-server=$ACR_SERVER --docker-username=$ACR_USER --docker-password=$ACR_PWD --docker-email=brianisrunning@gmail.com
+kubectl create secret docker-registry acr-secret --docker-server=$ACR_SERVER --docker-username=$ACR_USER --docker-password=$ACR_PWD --docker-email=brianisrunning@gmail.com
+```
 
-- OpenFaaS 
+- OpenFaaS (Optional)
     * Follow step here: https://docs.microsoft.com/en-us/azure/aks/openfaas 
-
+    
+    ```
     cd faas-netes
     kubectl create namespace openfaas
     kubectl create namespace openfaas-fn
@@ -48,9 +56,11 @@
     export FAAS_GW=http://$(kubectl get svc --namespace openfaas gateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080
 
     echo $FAAS_GW
-
+    ```
+    
     * Grafana Dashboard
 
+    ```
     helm install --name grafana stable/grafana --version 0.5.1 --set server.service.type=LoadBalancer,server.adminUser=admin,server.adminPassword=Your@Password,server.image=grafana/grafana:4.6.3,server.persistentVolume.enabled=false --namespace openfaas
 
     kubectl get service grafana-grafana -n openfaas
@@ -58,24 +68,29 @@
     export PROM_URL=http://$(kubectl get svc --namespace openfaas prometheus -o jsonpath='{.spec.clusterIP}'):9090
 
     echo $PROM_URL | pbcopy
-
+    ```
+    
     * Dashboards: 3434
 
     * Deploy sms-ratings function
     Set `gateway` in sms-ratings.yml 
     Set `environment: API_URL` in sms-ratings.yml
 
+    ```
     brew install faas-cli (if needed)
     
     cd ./sms-ratings
 
     faas-cli build -f ./sms-ratings.yml && faas-cli push -f ./sms-ratings.yml && faas-cli deploy -f ./sms-ratings.yml
+    ```
 
     * Update webhooks in Twilio (4 numbers)
 
+    ```
     export TWILIO_WEBHOOK=http://$(kubectl get svc --namespace openfaas gateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080/function/sms-ratings
 
     echo $TWILIO_WEBHOOK | pbcopy
+    ```
 
     * Test a SMS
 
@@ -110,11 +125,13 @@ Remove stuff from testing:
 
 - Install Brigade
 
+    ```
     helm version
 
     helm repo add brigade https://azure.github.io/brigade
 
     helm install -n brigade brigade/brigade --set rbac.enabled=false --set api.service.type=LoadBalancer
+    ```
 
 - Modify `brig-proj-kubecon.yaml`
     - Set Github path
@@ -125,11 +142,13 @@ Remove stuff from testing:
 
 - Add Brigade project
 
+    ```
     helm install --name brig-proj-kubecon-web brigade/brigade-project -f brig-proj-kubecon.yaml
 
     helm ls
 
     brig project list
+    ```
 
 - Create `brigade.js` 
 
